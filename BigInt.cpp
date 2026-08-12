@@ -8,12 +8,35 @@ class BigInt {
 
     // Remove unnecessary leading zeros from the number string
     void removeLeadingZeros() {
+        while (number.length() > 1 && number[0] == '0') {
+        number.erase(0, 1);
+    }
+
+    if (number == "0") {
+        isNegative = false;
+    }
         // TODO: Implement this function
     }
 
     // Compare absolute values of two BigInts (ignore signs)
     // Returns: 1 if |this| > |other|, 0 if equal, -1 if |this| < |other|
     int compareMagnitude(const BigInt& other) const {
+        if (number.length() > other.number.length()) {
+        return 1;
+    }
+
+    if (number.length() < other.number.length()) {
+        return -1;
+    }
+
+    if (number > other.number) {
+        return 1;
+    }
+
+    if (number < other.number) {
+        return -1;
+    }
+
         // TODO: Implement this function
         return 0;
     }
