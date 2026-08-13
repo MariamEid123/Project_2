@@ -94,6 +94,7 @@ public:
         isNegative = other.isNegative;
 
         return *this;
+        
     }
 
     // Unary negation operator (-x)
