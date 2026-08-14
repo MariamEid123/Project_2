@@ -42,6 +42,64 @@ class BigInt {
         return 0;
     }
 
+    static string addMagnitudes(const string& a, const string& b) {
+        string result;
+        int i = (int)a.length() - 1;
+        int j = (int)b.length() - 1;
+        int carry = 0;
+
+        while (i >= 0 || j >= 0 || carry) {
+            int digitA = (i >= 0) ? (a[i] - '0') : 0;
+            int digitB = (j >= 0) ? (b[j] - '0') : 0;
+            int sum = digitA + digitB + carry;
+            carry = sum / 10;
+            result.push_back(char('0' + (sum % 10)));
+            i--;
+            j--;
+        }
+
+        // result was built least-significant-digit first, so reverse it
+        for (size_t k = 0; k < result.length() / 2; k++) {
+            swap(result[k], result[result.length() - 1 - k]);
+        }
+        return result;
+    }
+
+    static string subMagnitudes(const string& a, const string& b) {
+        string result;
+        int i = (int)a.length() - 1;
+        int j = (int)b.length() - 1;
+        int borrow = 0;
+
+        while (i >= 0) {
+            int digitA = (a[i] - '0') - borrow;
+            int digitB = (j >= 0) ? (b[j] - '0') : 0;
+
+            if (digitA < digitB) {
+                digitA += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+
+            result.push_back(char('0' + (digitA - digitB)));
+            i--;
+            j--;
+        }
+
+        // result was built least-significant-digit first, so reverse it
+        for (size_t k = 0; k < result.length() / 2; k++) {
+            swap(result[k], result[result.length() - 1 - k]);
+        }
+
+        // remove any leading zeros produced by the subtraction
+        size_t firstNonZero = result.find_first_not_of('0');
+        if (firstNonZero == string::npos) {
+            return "0";
+        }
+        return result.substr(firstNonZero);
+    }
+
 public:
     // Default constructor - initialize to zero
     BigInt() {
@@ -112,13 +170,47 @@ public:
 
     // Addition assignment operator (x += y)
     BigInt& operator+=(const BigInt& other) {
-        // TODO: Implement this operator
+        if (isNegative == other.isNegative) {
+            // Same sign: add magnitudes, keep the sign
+            number = addMagnitudes(number, other.number);
+        } else {
+            // Different signs: subtract smaller magnitude from larger
+            int cmp = compareMagnitude(other);
+            if (cmp >= 0) {
+                // |this| >= |other|: result keeps this's sign
+                number = subMagnitudes(number, other.number);
+            } else {
+                // |other| > |this|: result takes other's sign
+                number = subMagnitudes(other.number, number);
+                isNegative = other.isNegative;
+            }
+        }
+
+        removeLeadingZeros();
         return *this;
     }
 
     // Subtraction assignment operator (x -= y)
     BigInt& operator-=(const BigInt& other) {
-        // TODO: Implement this operator
+        bool otherEffectiveSign = !other.isNegative;
+
+        if (isNegative == otherEffectiveSign) {
+            // Effective signs match: add magnitudes, keep the sign
+            number = addMagnitudes(number, other.number);
+        } else {
+            // Effective signs differ: subtract smaller magnitude from larger
+            int compare = compareMagnitude(other);
+            if (compare >= 0) {
+                // |this| >= |other|: result keeps this's sign
+                number = subMagnitudes(number, other.number);
+            } else {
+                // |other| > |this|: result takes other's effective sign
+                number = subMagnitudes(other.number, number);
+                isNegative = otherEffectiveSign;
+            }
+        }
+
+        removeLeadingZeros();
         return *this;
     }
 
@@ -191,16 +283,18 @@ public:
 
 // Binary addition operator (x + y)
 BigInt operator+(BigInt lhs, const BigInt& rhs) {
-    BigInt result;
-    // TODO: Implement this operator
-    return result;
+    //BigInt result;
+    lhs += rhs;
+    //return result;
+    return lhs;
 }
 
 // Binary subtraction operator (x - y)
 BigInt operator-(BigInt lhs, const BigInt& rhs) {
-    BigInt result;
-    // TODO: Implement this operator
-    return result;
+    //BigInt result;
+    lhs -= rhs;
+    //return result;
+    return lhs;
 }
 
 // Binary multiplication operator (x * y)
