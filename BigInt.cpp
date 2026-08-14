@@ -142,31 +142,34 @@ public:
        
     }
 
-    // Assignment operator
-    BigInt& operator=(const BigInt& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        number = other.number;
-        isNegative = other.isNegative;
-
+   // Assignment operator
+BigInt& operator=(const BigInt& other) {
+    if (this == &other) {
         return *this;
     }
 
-    // Unary negation operator (-x)
-    BigInt operator-() const {
-        BigInt result;
-        // TODO: Implement negation logic
-        return result;
+    number = other.number;
+    isNegative = other.isNegative;
+
+    return *this;
+}
+
+// Unary negation operator (-x)
+BigInt operator-() const {
+    BigInt result = *this;
+
+    // Don't make zero negative
+    if (result.number != "0") {
+        result.isNegative = !result.isNegative;
     }
 
-    // Unary plus operator (+x)
-    BigInt operator+() const {
-        BigInt result;
-        // TODO: Implement this operator
-        return result;
-    }
+    return result;
+}
+
+// Unary plus operator (+x)
+BigInt operator+() const {
+    return *this;
+}
 
     // Addition assignment operator (x += y)
     BigInt& operator+=(const BigInt& other) {
