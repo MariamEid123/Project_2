@@ -5,10 +5,10 @@
 using namespace std;
 
 class BigInt {
-    string number;    // Stores the number as a string
-    bool isNegative;  // True if number is negative
+    string number;    
+    bool isNegative; 
 
-    // Remove unnecessary leading zeros from the number string
+   
     void removeLeadingZeros() {
         while (number.length() > 1 && number[0] == '0') {
         number.erase(0, 1);
@@ -17,7 +17,7 @@ class BigInt {
     if (number == "0") {
         isNegative = false;
     }
-        // TODO: Implement this function
+    
     }
 
     // Compare absolute values of two BigInts (ignore signs)
@@ -39,7 +39,6 @@ class BigInt {
         return -1;
     }
 
-        // TODO: Implement this function
         return 0;
     }
 
@@ -603,7 +602,7 @@ int main() {
     cout << "Your task is to implement ALL the functions above." << endl;
     cout << "The tests below will work once you implement them correctly." << endl << endl;
 
-/*
+
 
     // Test 1: Constructors and basic output
 
@@ -698,7 +697,7 @@ int main() {
 
     cout << "Negative modulus: "
          << BigInt(-10) % BigInt(3) << endl;
-    */
+    
 
 
     return 0;
